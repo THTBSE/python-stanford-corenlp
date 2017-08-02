@@ -19,30 +19,23 @@ Annotation Server Usage
 
 .. code-block:: python
 
-  from corenlp import CoreNLPClient
+  import corenlp
 
-  text = "Chris wrote a simple sentence that he parsed with Stanford CoreNLP."
+  text = "对句子进行深入的语义分析，一直是自然语言处理所追求的目标。"
 
   # We assume that you've defined a variable $JAVANLP_HOME
   # that points to a Stanford CoreNLP checkout.
   # The code below will launch StanfordCoreNLPServer in the background
   # and communicate with the server to annotate the sentence.
-  with corenlp.CoreNLPClient(annotators="tokenize ssplit".split()) as client:
+  with corenlp.CoreNLPClient(annotators="tokenize ssplit pos".split()) as client:
     ann = client.annotate(text)
 
   # You can access annotations using ann.
   sentence = ann.sentence[0]
 
-  # The corenlp.to_text function is a helper function that
-  # reconstructs a sentence from tokens.
-  assert corenlp.to_text(sentence) == text
-
-  # You can access any property within a sentence.
-  print(sentence.text)
-
   # Likewise for tokens
-  token = sentence.token[0]
-  print(token.lemma)
+  for token in sentence.token:
+    print token.word, token.pos
 
 See `test_client.py` and `test_protobuf.py` for more examples.
 
