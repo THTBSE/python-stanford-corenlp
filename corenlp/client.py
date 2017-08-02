@@ -1,3 +1,4 @@
+#-*- coding:utf-8 -*-
 r"""
 Python CoreNLP: a server based interface to Java CoreNLP.
 """
@@ -179,7 +180,11 @@ class CoreNLPClient(RobustService):
                 'outputFormat': 'serialized',
                 'serializer': 'edu.stanford.nlp.pipeline.ProtobufAnnotationSerializer'
             })
-        r = self._request(text.encode('utf-8'), properties)
+
+        # 如果text本身就是utf-8,再encode会报错
+        if isinstance(text, unicode):
+            text = text.encode('utf-8')
+        r = self._request(text, properties)
         doc = Document()
         parseFromDelimitedString(doc, r.content)
         return doc
